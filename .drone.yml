@@ -23,7 +23,7 @@ steps:
     - name: dockersock
       path: /var/run/docker.sock
     commands:
-    - sleep 10
+    - sleep 5
     - docker build --tag autkast/fanews:d-sha-${DRONE_COMMIT_SHA} .
     - docker push autkast/fanews:d-sha-${DRONE_COMMIT_SHA}
 
@@ -33,39 +33,9 @@ services:
     privilged: true
     volumes:
     - name: dockersock
-      path: /var/run/docker.sock
+      path: /var/run
 
 volumes:
   - name: dockersock
-    temp: {}
-
-# ---
-# kind: pipeline
-# type: exec
-# name: build & test
-# trigger:
-#   event:
-#     - push
-# platform:
-#   os: windows
-#   arch: amd64
-
-# steps:
-# - name: build initial docker image
-#   commands:
-#   - |
-#     docker build --tag autkast/fanews:d-sha-${DRONE_COMMIT_SHA} .
-#     docker push autkast/fanews:d-sha-${DRONE_COMMIT_SHA}
-
-# deploy
-# ---
-# kind: pipeline
-# type: kubernetes
-# name: deploy to minikube
-# trigger:
-#   event:
-#     - push
-
-# steps:
-# - name: deploy to minikube
-  
+    host:
+      path: /var/run/docker.sock
