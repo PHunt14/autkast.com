@@ -27,6 +27,18 @@ steps:
       docker build --tag autkast/fanews:d-sha-${DRONE_COMMIT_SHA} .
       docker push autkast/fanews:d-sha-${DRONE_COMMIT_SHA}
 
+services:
+  - name: docker
+    image: docker:dind
+    privilged: true
+    volumes:
+    - name: dockersock
+      path: /var/run
+
+volumes:
+  - name: dockersock
+    temp: {}
+
 # ---
 # kind: pipeline
 # type: exec
