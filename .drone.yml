@@ -23,9 +23,9 @@ steps:
     - name: dockersock
       path: /var/run
     commands:
-    - |
-      docker build --tag autkast/fanews:d-sha-${DRONE_COMMIT_SHA} .
-      docker push autkast/fanews:d-sha-${DRONE_COMMIT_SHA}
+    - sleep 5
+    - docker build --tag autkast/fanews:d-sha-${DRONE_COMMIT_SHA} .
+    - docker push autkast/fanews:d-sha-${DRONE_COMMIT_SHA}
 
 services:
   - name: docker
