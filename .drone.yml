@@ -1,0 +1,9 @@
+kind: pipeline
+type: kubernetes
+name: node-demo
+
+steps:
+- name: english
+  image: alpine
+  commands:
+  - echo hello world
