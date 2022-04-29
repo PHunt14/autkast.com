@@ -21,13 +21,18 @@ trigger:
 steps:
 - name: build initial docker image
   image: docker
-  # volumes: 
-  #   - name: docker
-  #     path: /var/run/docker.sock
+  volumes: 
+    - name: docker
+      path: /var/run/docker.sock
   commands:
   - |
     docker build --tag autkast/fanews:d-sha-${DRONE_COMMIT_SHA} .
     docker push autkast/fanews:d-sha-${DRONE_COMMIT_SHA}
+
+volumes:
+- name: docker
+  host:
+    path: /var/run/docker.sock
 
 # ---
 # kind: pipeline
