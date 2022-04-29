@@ -7,3 +7,37 @@ steps:
   image: alpine
   commands:
   - echo hello world
+
+# compiling & testing
+# produce artifact to be deployed
+---
+kind: pipeline
+type: kubernetes
+name: build & test
+trigger:
+  event:
+    - push
+
+steps:
+- name: build initial docker image
+  image: docker
+  volumes: 
+    - name: docker
+      path: /var/run/docker.sock
+  commands:
+  - |
+    docker build --tag autkast/fanews:d-sha-${DRONE_COMMIT_SHA} .
+    docker push autkast/fanews:d-sha-${DRONE_COMMIT_SHA}
+
+# deploy
+# ---
+# kind: pipeline
+# type: kubernetes
+# name: deploy to minikube
+# trigger:
+#   event:
+#     - push
+
+# steps:
+# - name: deploy to minikube
+  
