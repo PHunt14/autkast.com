@@ -14,26 +14,18 @@ steps:
 kind: pipeline
 type: kubernetes
 name: build & test
-trigger:
-  event:
-    - push
 
 steps:
-- name: build initial docker image
-  privileged: true
-  image: docker
-  volumes: 
-    - name: docker
-      path: /var/run/docker.sock
-  commands:
-  - |
-    docker build --tag autkast/fanews:d-sha-${DRONE_COMMIT_SHA} .
-    docker push autkast/fanews:d-sha-${DRONE_COMMIT_SHA}
 
-volumes:
-- name: docker
-  host:
-    path: /var/run/docker.sock
+  - name: build & push
+    image: docker:dind
+    volumes:
+    - name: dockersock
+      path: /var/run
+    commands:
+    - |
+      docker build --tag autkast/fanews:d-sha-${DRONE_COMMIT_SHA} .
+      docker push autkast/fanews:d-sha-${DRONE_COMMIT_SHA}
 
 # ---
 # kind: pipeline
