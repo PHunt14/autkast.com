@@ -21,9 +21,9 @@ steps:
     image: docker:dind
     volumes:
     - name: dockersock
-      path: /var/run
+      path: /var/run/docker.sock
     commands:
-    - sleep 5
+    - sleep 10
     - docker build --tag autkast/fanews:d-sha-${DRONE_COMMIT_SHA} .
     - docker push autkast/fanews:d-sha-${DRONE_COMMIT_SHA}
 
@@ -33,7 +33,7 @@ services:
     privilged: true
     volumes:
     - name: dockersock
-      path: /var/run
+      path: /var/run/docker.sock
 
 volumes:
   - name: dockersock
