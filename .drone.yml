@@ -20,6 +20,7 @@ trigger:
 
 steps:
 - name: build initial docker image
+  privileged: true
   image: docker
   volumes: 
     - name: docker
