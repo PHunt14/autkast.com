@@ -10,42 +10,42 @@ steps:
 
 # compiling & testing
 # produce artifact to be deployed
-# ---
-# kind: pipeline
-# type: kubernetes
-# name: build & test
-# trigger:
-#   event:
-#     - push
-
-# steps:
-# - name: build initial docker image
-#   image: docker
-#   volumes: 
-#     - name: docker
-#       path: /var/run/docker.sock
-#   commands:
-#   - |
-#     docker build --tag autkast/fanews:d-sha-${DRONE_COMMIT_SHA} .
-#     docker push autkast/fanews:d-sha-${DRONE_COMMIT_SHA}
-
 ---
 kind: pipeline
-type: exec
+type: kubernetes
 name: build & test
 trigger:
   event:
     - push
-platform:
-  os: windows
-  arch: amd64
 
 steps:
 - name: build initial docker image
+  image: docker
+  # volumes: 
+  #   - name: docker
+  #     path: /var/run/docker.sock
   commands:
   - |
     docker build --tag autkast/fanews:d-sha-${DRONE_COMMIT_SHA} .
     docker push autkast/fanews:d-sha-${DRONE_COMMIT_SHA}
+
+# ---
+# kind: pipeline
+# type: exec
+# name: build & test
+# trigger:
+#   event:
+#     - push
+# platform:
+#   os: windows
+#   arch: amd64
+
+# steps:
+# - name: build initial docker image
+#   commands:
+#   - |
+#     docker build --tag autkast/fanews:d-sha-${DRONE_COMMIT_SHA} .
+#     docker push autkast/fanews:d-sha-${DRONE_COMMIT_SHA}
 
 # deploy
 # ---
