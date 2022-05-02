@@ -10,36 +10,36 @@ steps:
 
 # compiling & testing
 # produce artifact to be deployed
----
-kind: pipeline
-type: docker
-name: build & test
+# ---
+# kind: pipeline
+# type: docker
+# name: build & test
 
-trigger:
-  branches:
-    - master
-  event:
-    - push
+# trigger:
+#   branches:
+#     - master
+#   event:
+#     - push
 
-steps:
-  - name: restore-cache
-    image: drillster/drone-volume-cache
-    settings:
-      restore: true
-      mount:
-        - target
-    volumes:
-      - name: cache
-        path: /cache
+# steps:
+#   - name: restore-cache
+#     image: drillster/drone-volume-cache
+#     settings:
+#       restore: true
+#       mount:
+#         - target
+#     volumes:
+#       - name: cache
+#         path: /cache
 
-  - name: prepare-cache
-    image: busybox
-    commands:
-      - mkdir -p /cache/${DRONE_REPO}/target
-      - mkdir -p /cache/${DRONE_REPO}/docker
-    volumes:
-      - name: cache
-        path: /cache
+#   - name: prepare-cache
+#     image: busybox
+#     commands:
+#       - mkdir -p /cache/${DRONE_REPO}/target
+#       - mkdir -p /cache/${DRONE_REPO}/docker
+#     volumes:
+#       - name: cache
+#         path: /cache
   
   # - name: build
   #   image: plugins/docker
@@ -59,41 +59,42 @@ steps:
   #     - name: docker
   #       path: /var/lib/docker
 
-volumes:
-- name: cache
-  host:
-    path: /var/cache
-- name: target
-  host:
-    path: /cache/${DRONE_REPO}/target
-- name: docker
-  host:
-    path: /cache/${DRONE_REPO}/docker
-# kind: pipeline
-# type: kubernetes
-# name: build & test
-
-# steps:
-
-#   - name: build & push
-#     image: docker:dind
-#     volumes:
-#     - name: dockersock
-#       path: /var/run/docker.sock
-#     commands:
-#     - sleep 5
-#     - docker build --tag autkast/fanews:d-sha-${DRONE_COMMIT_SHA} .
-#     - docker push autkast/fanews:d-sha-${DRONE_COMMIT_SHA}
-
-# services:
-#   - name: docker
-#     image: docker:dind
-#     privilged: true
-#     volumes:
-#     - name: dockersock
-#       path: /var/run
-
 # volumes:
-#   - name: dockersock
-#     host:
-#       path: /var/run/docker.sock
+# - name: cache
+#   host:
+#     path: /var/cache
+# - name: target
+#   host:
+#     path: /cache/${DRONE_REPO}/target
+# - name: docker
+#   host:
+#     path: /cache/${DRONE_REPO}/docker
+---
+kind: pipeline
+type: kubernetes
+name: build & test
+
+steps:
+
+  - name: build & push
+    image: docker:dind
+    volumes:
+    - name: dockersock
+      path: /var/run/docker.sock
+    commands:
+    - sleep 5
+    - docker build --tag autkast/fanews:d-sha-${DRONE_COMMIT_SHA} .
+    - docker push autkast/fanews:d-sha-${DRONE_COMMIT_SHA}
+
+services:
+  - name: docker
+    image: docker:dind
+    privilged: true
+    volumes:
+    - name: dockersock
+      path: /var/run
+
+volumes:
+  - name: dockersock
+    host:
+      path: /var/run/docker.sock
