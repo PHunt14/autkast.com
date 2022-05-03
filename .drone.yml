@@ -8,34 +8,34 @@ steps:
   commands:
   - echo hello world
 
----
-kind: pipeline
-type: kubernetes
-name: build & test
+# ---
+# kind: pipeline
+# type: kubernetes
+# name: build & test
 
-steps:
+# steps:
 
-  - name: build & push
-    image: docker:dind
-    volumes:
-    - name: dockersock
-      path: /var/run/docker.sock
-    commands:
-    - sleep 5
-    - docker build --tag autkast/fanews:d-sha-${DRONE_COMMIT_SHA} .
-    - docker push autkast/fanews:d-sha-${DRONE_COMMIT_SHA}
+#   - name: build & push
+#     image: docker:dind
+#     volumes:
+#     - name: dockersock
+#       path: /var/run/docker.sock
+#     commands:
+#     - sleep 5
+#     - docker build --tag autkast/fanews:d-sha-${DRONE_COMMIT_SHA} .
+#     - docker push autkast/fanews:d-sha-${DRONE_COMMIT_SHA}
 
-services:
-  - name: docker
-    image: docker:dind
-    privilged: true
-    volumes:
-    - name: dockersock
-      path: /var/run
+# services:
+#   - name: docker
+#     image: docker:dind
+#     privilged: true
+#     volumes:
+#     - name: dockersock
+#       path: /var/run
 
-volumes:
-  - name: dockersock
-    host:
-      path: /var/run/docker.sock
+# volumes:
+#   - name: dockersock
+#     host:
+#       path: /var/run/docker.sock
 
 # some change to trigger a build
