@@ -8,7 +8,7 @@
 #   commands:
 #   - echo hello world
 
----
+#---
 kind: pipeline
 type: kubernetes
 name: build & test
