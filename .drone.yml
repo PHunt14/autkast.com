@@ -8,6 +8,28 @@ steps:
   commands:
   - echo hello world
 
+---
+kind: pipeline
+name: default
+type: docker
+
+steps:
+
+- name: docker
+  image: plugins/docker
+  settings:
+    repo: autkast/fanews
+    tags:
+      - latest
+      - d-sha-${DRONE_COMMIT_SHA}
+
+
+
+
+
+
+
+
 #---
 # kind: pipeline
 # type: kubernetes
@@ -15,28 +37,28 @@ steps:
 
 # steps:
 
-- name: build & push
-  image: docker:dind
-  volumes:
-  - name: dockersock
-    path: /var/run/docker.sock
-    commands:
-      - sleep 5
-      - docker build --tag autkast/fanews:d-sha-${DRONE_COMMIT_SHA} .
-      - docker push autkast/fanews:d-sha-${DRONE_COMMIT_SHA}
+# - name: build & push
+#   image: docker:dind
+#   volumes:
+#   - name: dockersock
+#     path: /var/run/docker.sock
+#     commands:
+#       - sleep 5
+#       - docker build --tag autkast/fanews:d-sha-${DRONE_COMMIT_SHA} .
+#       - docker push autkast/fanews:d-sha-${DRONE_COMMIT_SHA}
 
-services:
-  - name: docker
-    image: docker:dind
-    privilged: true
-    volumes:
-    - name: dockersock
-      path: /var/run
+# services:
+#   - name: docker
+#     image: docker:dind
+#     privilged: true
+#     volumes:
+#     - name: dockersock
+#       path: /var/run
 
-volumes:
-  - name: dockersock
-    host:
-      path: /var/run/docker.sock
+# volumes:
+#   - name: dockersock
+#     host:
+#       path: /var/run/docker.sock
 
 # ---
 # https://vitobotta.com/2019/10/09/ci-cd-with-drone-for-deployment-to-kubernetes-with-helm/
