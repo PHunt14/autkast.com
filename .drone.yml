@@ -15,10 +15,10 @@ type: docker
 
 steps:
 
-- name: test
-  image: alpine
-  commands:
-    - echo hello drone
+# - name: test
+#   image: alpine
+#   commands:
+#     - echo hello drone
 
 - name: docker build & publish
   image: plugins/docker
