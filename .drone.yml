@@ -1,21 +1,26 @@
-kind: pipeline
-type: kubernetes
-name: test
+# kind: pipeline
+# type: kubernetes
+# name: test
 
-steps:
-- name: english
-  image: alpine
-  commands:
-  - echo hello world
+# steps:
+# - name: english
+#   image: alpine
+#   commands:
+#   - echo hello world
 
----
+# ---
 kind: pipeline
 name: default
 type: docker
 
 steps:
 
-- name: docker
+- name: test
+  image: alpine
+  commands:
+    - echo hello drone
+
+- name: docker build & publish
   image: plugins/docker
   settings:
     repo: autkast/fanews
