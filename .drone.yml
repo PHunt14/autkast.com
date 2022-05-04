@@ -1,24 +1,12 @@
-# kind: pipeline
-# type: kubernetes
-# name: test
-
-# steps:
-# - name: english
-#   image: alpine
-#   commands:
-#   - echo hello world
-
-# ---
 kind: pipeline
-name: default
-type: docker
+type: kubernetes
+name: test
 
 steps:
-
-# - name: test
-#   image: alpine
-#   commands:
-#     - echo hello drone
+- name: english
+  image: alpine
+  commands:
+  - echo hello world
 
 - name: docker build & publish
   image: plugins/docker
@@ -27,6 +15,26 @@ steps:
     tags:
       - latest
       - d-sha-${DRONE_COMMIT_SHA}
+
+# ---
+# kind: pipeline
+# name: default
+# type: docker
+
+# steps:
+
+# - name: test
+#   image: alpine
+#   commands:
+#     - echo hello drone
+
+# - name: docker build & publish
+#   image: plugins/docker
+#   settings:
+#     repo: autkast/fanews
+#     tags:
+#       - latest
+#       - d-sha-${DRONE_COMMIT_SHA}
 
 
 
