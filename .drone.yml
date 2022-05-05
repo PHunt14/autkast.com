@@ -31,4 +31,4 @@ steps:
       - ph-testing-drone
       
   commands:
-    - ./test/test_script.sh
+    - bash test/test_script.sh
