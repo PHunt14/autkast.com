@@ -3,6 +3,7 @@ type: kubernetes
 name: test
 
 steps:
+
 - name: english
   image: alpine
   commands:
@@ -16,8 +17,6 @@ steps:
     password:
       from_secret: docker_password
     repo: autkast/fanews
-    debug: true
     tags:
     - latest
     - sha-${DRONE_COMMIT_SHA}
-
