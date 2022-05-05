@@ -20,3 +20,12 @@ steps:
     tags:
     - latest
     - sha-${DRONE_COMMIT_SHA}
+
+- name: trigger a test script
+  image: alpine
+  when:
+    branch:
+      - master
+      
+  commands:
+    - ./test/test_script.sh
