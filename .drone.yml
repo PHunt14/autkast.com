@@ -26,9 +26,8 @@ steps:
 
 - name: trigger a test script
   image: bitnami/git
-  when:
-    branch:
-      - ph-testing-drone
-      
+  # when:
+  #   branch:
+  #     - master
   commands:
     - sh test/test_script.sh 60
