@@ -16,6 +16,7 @@ steps:
     password:
       from_secret: docker_password
     repo: autkast/fanews
+    debug: true
     tags:
     - latest
 
