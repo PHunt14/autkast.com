@@ -25,7 +25,7 @@ steps:
     - sha-${DRONE_COMMIT_SHA}
 
 - name: trigger a test script
-  image: alpine
+  image: bitnami/git
   when:
     branch:
       - ph-testing-drone
