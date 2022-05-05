@@ -31,4 +31,4 @@ steps:
       - ph-testing-drone
       
   commands:
-    - sh test/test_script.sh dev 60
+    - sh test/test_script.sh 60
