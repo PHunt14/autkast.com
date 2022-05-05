@@ -10,10 +10,20 @@ someFunction() {
     done
 }
 
-# gitDiff() {
-#     changedFile=$(git diff --name-only index.html fanews.css)
-#     if [ "$changedFile" = "index.html"
-# }
+gitDiff() {
+    changedFile=$(git diff --name-only index.html fanews.css)
+    if [ "$changedFile" = "index.html" ];
+    then
+    environment=dev
+    someFunction
+    elif [ "$changedFile" = "fanews.css" ];
+    then
+    environment=test
+    someFunction
+    else
+        echo "neither environment file updated, not checking components"
+    fi
+}
 
 help() {
 	# display help
@@ -40,6 +50,7 @@ while getopts ":h" option; do
 	esac
 done
 
-environment=$1
-userTimeout=$2
-someFunction
+userTimeout=$1
+endTime=$(( $(date +%s) + userTimeout ))
+gitDiff
+# someFunction
