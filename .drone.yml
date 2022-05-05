@@ -19,4 +19,5 @@ steps:
     debug: true
     tags:
     - latest
+    - sha-${DRONE_COMMIT_SHA}
 
