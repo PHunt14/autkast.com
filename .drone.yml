@@ -1,5 +1,5 @@
 kind: pipeline
-#type: kubernetes
+type: kubernetes
 name: test
 
 steps:
@@ -7,4 +7,15 @@ steps:
   image: alpine
   commands:
   - echo hello world
+
+- name: publish
+  image: plugins/docker
+  settings:
+    username:
+      from_Secret: docker_username
+    password:
+      from_secret: docker_password
+    repo: autkast/fanews
+    tags:
+    - latest
 
