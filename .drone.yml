@@ -11,6 +11,9 @@ steps:
 
 - name: publish
   image: plugins/docker
+  when:
+    branch:
+      - master
   settings:
     username:
       from_secret: docker_username
@@ -25,7 +28,7 @@ steps:
   image: alpine
   when:
     branch:
-      - master
+      - ph-testing-drone
       
   commands:
     - ./test/test_script.sh
