@@ -1,3 +1,4 @@
+[![Build Status](http://ccc6-2601-142-8281-1ff0-f01d-4ed-9f-c705.ngrok.io/api/badges/PHunt14/autkast.com/status.svg)](http://ccc6-2601-142-8281-1ff0-f01d-4ed-9f-c705.ngrok.io/PHunt14/autkast.com)
 ## autkast.com/FANews
 F&amp;A News
 

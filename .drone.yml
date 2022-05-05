@@ -11,6 +11,9 @@ steps:
 
 - name: publish
   image: plugins/docker
+  when:
+    branch:
+      - master
   settings:
     username:
       from_secret: docker_username
@@ -22,10 +25,10 @@ steps:
     - sha-${DRONE_COMMIT_SHA}
 
 - name: trigger a test script
-  image: alpine
+  image: bitnami/git
   when:
     branch:
-      - master
+      - ph-testing-drone
       
   commands:
-    - ./test/test_script.sh
+    - sh test/test_script.sh 60
