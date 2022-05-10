@@ -26,9 +26,9 @@ steps:
 
 - name: trigger a test script
   image: bitnami/git
-  # when:
-  #   branch:
-  #     - master
+  when:
+    branch:
+      - master
   commands:
     - cd test/
     - sh ./test_script.sh 60
