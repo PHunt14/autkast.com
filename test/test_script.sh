@@ -2,35 +2,57 @@
 set -u
 set -o errexit
 
-someFunction() {
-    endTime=$(( $(date +%s) + userTimeout ))
-    for component in foo bar
-    do
-        echo "checking $component in $environment"
-    done
+# invoke a script that uses kubectl to query the 'up-to-date' and 'ready' counters for the api and integrations deployments for QA and UAT, waiting for it to be ready.  Fail after 5ish minutes
+
+checkEnvironment(){
+# check if specific files have been updated.  to add to this list simply update the for loop with a new value.
+	for environment in qa uat
+	do
+		changedFile=$(git diff --name-only helmfile.d/$environment.yaml)
+		if [ -n "$changedFile" ]; then
+			echo "Checking $environment components (helm/helmfile.d/$environment.yaml updated)"
+			validateDeployment "$environment"
+		else
+			echo "$environment helmfile not updated, not checking components as they will not be restarted"
+		fi
+	done
 }
 
-gitDiff() {
-    changedFile=$(git diff --name-only index.html fanews.css)
-    if [ "$changedFile" = "index.html" ];
-    then
-    environment=dev
-    someFunction
-    elif [ "$changedFile" = "fanews.css" ];
-    then
-    environment=test
-    someFunction
-    else
-        echo "neither environment file updated, not checking components"
-    fi
+validateDeployment() {
+# compare the ready pods against the requested number of replicas.  If they do not match by the requested timeout, or if none are requested fail.
+	environment=$1
+	endTime=$(( $(date +%s) + userTimeout ))
+	for component in api integrations
+	do
+		echo "checking $component"
+		readyCount=$(kubectl -n $environment get deployment -l component=$component,app=axiom -o jsonpath='{.items[*].status.readyReplicas}')
+		replicaCount=$(kubectl -n $environment get deployment -l component=$component,app=axiom -o jsonpath='{.items[*].status.replicas}')
+		if [ -z "$replicaCount" ]; then
+			echo "no replicas requested, this seems wrong.  Exiting"
+			exit 1;
+		else
+			echo "Ready/Replicas"
+			while [ "$readyCount" != "$replicaCount" ]; do
+				if [ "$readyCount" != "$replicaCount" ] && [ $(date +%s) -lt $endTime ]; then
+					echo "$readyCount/$replicaCount"
+					sleep 10
+					readyCount=$(kubectl -n $environment get deployment -l component=$component,app=axiom -o jsonpath='{.items[*].status.readyReplicas}')
+					replicaCount=$(kubectl -n $environment get deployment -l component=$component,app=axiom -o jsonpath='{.items[*].status.replicas}')
+				elif [ "$readyCount" != "$replicaCount" ] && [ $(date +%s) -gt $endTime ]; then
+					echo "pods did not become ready.  Exiting"
+					exit 1;
+				fi
+			done
+		fi
+		echo "$readyCount/$replicaCount"
+		echo "deployments up to date"
+	done
 }
 
 help() {
-	# display help
-	echo "Run a test script with some fake options"
+	echo "Wait for the deployments to become Ready"
 	echo
-	echo "Syntax ./test_script.sh [-h] environment [dev|test] timeout (seconds)"
-	echo "environment has two options, 'dev' or 'test'"
+	echo "Syntax ./wait-for-up-to-date.sh [-h] timeout (seconds)"
 	echo "options:"
 	echo "h		print this help"
 	echo
@@ -41,9 +63,6 @@ while getopts ":h" option; do
 		h) #display help
 			help
 			exit;;
-		# t) # change the timeout
-		# 	userTimeout=$OPTARG;;
-		# 	setTimeout($userTimeout)
 		\?) #invalid option
 			echo "Error: Invalid option"
 		 	exit;;
@@ -51,6 +70,4 @@ while getopts ":h" option; do
 done
 
 userTimeout=$1
-endTime=$(( $(date +%s) + userTimeout ))
-gitDiff
-# someFunction
+checkEnvironment
