@@ -30,4 +30,5 @@ steps:
   #   branch:
   #     - master
   commands:
-    - sh test/test_script.sh 60
+    - cd test/
+    - ./test_script.sh 60
