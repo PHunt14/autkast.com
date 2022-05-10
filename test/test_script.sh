@@ -9,6 +9,10 @@ checkEnvironment(){
 	for environment in qa uat
 	do
 		# changedFile=$(git diff HEAD^ --name-only test-$environment.yaml)
+# when executed from a non-master branch
+# fatal: ambiguous argument 'origin/master': unknown revision or path not in the working tree.
+# Use '--' to separate paths from revisions, like this:
+# 'git <command> [<revision>...] -- [<file>...]'
 		if [ -n "$(git diff HEAD^ --name-only test-$environment.yaml)" ] || [ "$(git diff $DRONE_BRANCH origin/master --name-only test-$environment.yaml)" ]; then
 			echo "Checking $environment components (test/test-$environment.yaml updated)"
 			validateDeployment "$environment"
