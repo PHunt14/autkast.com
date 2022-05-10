@@ -8,7 +8,6 @@ checkEnvironment(){
 # check if specific files have been updated.  to add to this list simply update the for loop with a new value.
 	for environment in qa uat
 	do
-		echo $environment
 		# changedFile=$(git diff $DRONE_BRANCH origin/master --name-only test-$environment.yaml)
 		changedFile=$(git diff HEAD^ --name-only test-$environment.yaml)
 		if [ -n "$changedFile" ]; then
