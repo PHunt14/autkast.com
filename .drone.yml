@@ -9,20 +9,20 @@ steps:
   commands:
   - echo hello world
 
-- name: publish
-  image: plugins/docker
-  when:
-    branch:
-      - master
-  settings:
-    username:
-      from_secret: docker_username
-    password:
-      from_secret: docker_password
-    repo: autkast/fanews
-    tags:
-    - latest
-    - sha-${DRONE_COMMIT_SHA}
+# - name: publish
+#   image: plugins/docker
+#   when:
+#     branch:
+#       - master
+#   settings:
+#     username:
+#       from_secret: docker_username
+#     password:
+#       from_secret: docker_password
+#     repo: autkast/fanews
+#     tags:
+#     - latest
+#     - sha-${DRONE_COMMIT_SHA}
 
 - name: trigger a test script
   image: bitnami/git
