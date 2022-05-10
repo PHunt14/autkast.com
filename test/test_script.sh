@@ -8,9 +8,9 @@ checkEnvironment(){
 # check if specific files have been updated.  to add to this list simply update the for loop with a new value.
 	for environment in qa uat
 	do
-		changedFile=$(git diff --name-only helmfile.d/$environment.yaml)
+		changedFile=$(git diff $DRONE_BRANCH origin/master --name-only test-$environment.yaml)
 		if [ -n "$changedFile" ]; then
-			echo "Checking $environment components (helm/helmfile.d/$environment.yaml updated)"
+			echo "Checking $environment components (test/test-$environment.yaml updated)"
 			validateDeployment "$environment"
 		else
 			echo "$environment helmfile not updated, not checking components as they will not be restarted"
@@ -25,8 +25,10 @@ validateDeployment() {
 	for component in api integrations
 	do
 		echo "checking $component"
-		readyCount=$(kubectl -n $environment get deployment -l component=$component,app=axiom -o jsonpath='{.items[*].status.readyReplicas}')
-		replicaCount=$(kubectl -n $environment get deployment -l component=$component,app=axiom -o jsonpath='{.items[*].status.replicas}')
+		readyCount=1
+		replicaCount=1
+		# readyCount=$(kubectl -n $environment get deployment -l component=$component,app=axiom -o jsonpath='{.items[*].status.readyReplicas}')
+		# replicaCount=$(kubectl -n $environment get deployment -l component=$component,app=axiom -o jsonpath='{.items[*].status.replicas}')
 		if [ -z "$replicaCount" ]; then
 			echo "no replicas requested, this seems wrong.  Exiting"
 			exit 1;
