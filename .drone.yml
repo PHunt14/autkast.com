@@ -28,7 +28,7 @@ steps:
   image: bitnami/git
   when:
     branch:
-      - master
+      - ph-test-3
   commands:
     - cd test/
     - sh ./test_script.sh 60
