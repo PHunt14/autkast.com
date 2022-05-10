@@ -8,12 +8,15 @@ checkEnvironment(){
 # check if specific files have been updated.  to add to this list simply update the for loop with a new value.
 	for environment in qa uat
 	do
+		echo $environment
+		wholeDiff=$(git diff $DRONE_BRANCH origin/master)
 		changedFile=$(git diff $DRONE_BRANCH origin/master --name-only test-$environment.yaml)
+		echo $changedFile
 		if [ -n "$changedFile" ]; then
 			echo "Checking $environment components (test/test-$environment.yaml updated)"
 			validateDeployment "$environment"
 		else
-			echo "$environment helmfile not updated, not checking components as they will not be restarted"
+			echo "$environment (test/test-$environment.yaml) file not updated, not checking components as they will not be restarted"
 		fi
 	done
 }
