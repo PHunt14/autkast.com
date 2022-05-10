@@ -25,10 +25,10 @@ steps:
     - sha-${DRONE_COMMIT_SHA}
 
 - name: trigger a test script
-  image: ailabsteam/infrastructure-tools
+  image: bitnami/git
   # when:
   #   branch:
   #     - master
   commands:
     - cd test/
-    - ./test_script.sh 60
+    - sh ./test_script.sh 60
